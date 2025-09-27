@@ -1,3 +1,9 @@
+/*
+Bilal Umar
+185499233
+WEB322 NEE
+*/
+
 const path = require("path");
 const express = require('express');
 const ejs = require('ejs');
@@ -11,7 +17,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-      res.render('home', { pageTitle: 'My Express App', name: 'World' }); //change this!
+      res.render('main', { pageTitle: 'My Express App', name: 'World' }); //change this!
 });
 
 app.get('/sign-up', (req, res) => {
