@@ -74,7 +74,7 @@ function getAllMealKits() {
 }
 
 function getFeaturedMealKits(mealkits) {
-  return mealkits.array.forEach(meal => {
+  return mealkits.forEach(meal => {
     meal.featuredMealKit = true;
   });
 

@@ -1,1 +1,25 @@
-<body></body>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>FreshMeals</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    <header><%- include('partials/navbar') %></header>
+
+    <main class="flex-grow"><%- body %></main>
+
+    <footer><%- include('partials/footer'); %></footer>
+  </body>
+</html>

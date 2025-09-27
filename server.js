@@ -8,6 +8,8 @@ const path = require("path");
 const express = require('express');
 const ejs = require('ejs');
 const app = express();
+const mealkitData = require('./modules/mealkit-util');
+
 
 app.set('view engine', 'ejs');
 
@@ -17,15 +19,29 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-      res.render('main', { pageTitle: 'My Express App', name: 'World' }); //change this!
+    const allMealKits = mealkitData.getAllMealKits();
+    const featuredMealKits = mealkitData.getFeaturedMealKits(allMealKits);
+    res.render('home', {
+        title: 'Home',
+        featuredMealKits: featuredMealKits
+    });
+});
+
+app.get('/on-the-menu', (req, res) => {
+    const allMealKits = mealkitData.getAllMealKits();
+    const categorizedMealKits = mealkitData.getMealKitsByCategory(allMealKits);
+    res.render('on-the-menu', {
+        title: 'On The Menu',
+        mealKitsByCategory: categorizedMealKits
+    });
 });
 
 app.get('/sign-up', (req, res) => {
-    res.render('sign-up', { pageTitle: 'My Express App', name: 'World' });  //change this!
+    res.render('sign-up', { title: 'Sign Up' });
 });
 
 app.get('/log-in', (req, res) => {
-    res.render('log-in', { pageTitle: 'My Express App', name: 'World' });  //change this!
+    res.render('log-in', { title: 'Log In' });
 });
 
 app.use((req, res) => {
