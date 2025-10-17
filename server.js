@@ -1,13 +1,22 @@
-/*
-Bilal Umar
-185499233
-WEB322 NEE
-*/
+/*************************************************************************************
+* WEB322 - 2257 Project
+* I declare that this assignment is my own work in accordance with the Seneca Academic
+* Policy. No part of this assignment has been copied manually or electronically from
+* any other source (including web sites) or distributed to other students.
+*
+* Student Name  : Bilal Umar
+* Student ID    : 185499233
+* Student Email : bumar@myseneca.ca
+* Course/Section: WEB322/NEE
+*
+**************************************************************************************/
+
 
 const path = require("path");
 const express = require('express');
-const ejs = require('ejs');
 const app = express();
+
+const ejs = require('ejs');
 const expressLayouts = require('express-ejs-layouts');
 const mealkitData = require('./modules/mealkit-util');
 
@@ -17,7 +26,7 @@ app.use(expressLayouts);
 app.set('layout', 'layouts/main');
 app.set('views', path.join(__dirname, 'views'));
 
-// Serve static files from the "public" folder
+// use public for static imgs
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
@@ -31,11 +40,12 @@ app.get('/', (req, res) => {
 
 app.get('/on-the-menu', (req, res) => {
     const allMealKits = mealkitData.getAllMealKits();
-    const categorizedMealKits = mealkitData.getMealKitsByCategory(allMealKits);
+    const mealKitsByCategory = mealkitData.getMealKitsByCategory(allMealKits);
     res.render('on-the-menu', {
         title: 'On The Menu',
-        mealKitsByCategory: categorizedMealKits
+        mealKitsByCategory: mealKitsByCategory
     });
+
 });
 
 app.get('/sign-up', (req, res) => {
@@ -50,15 +60,12 @@ app.use((req, res) => {
     res.status(404).send("Page Not Found");
 });
 
-
 app.get('/headers', (req, res) => {
     res.json(req.headers);
 });
 
 
-// This use() will add an error handler function to
-// catch all errors.
-
+// *** DO NOT MODIFY THE LINES BELOW ***
 
 // Define a port to listen to requests on.
 const HTTP_PORT = process.env.PORT || 8080;

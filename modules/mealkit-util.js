@@ -8,7 +8,7 @@ let mealKits = [
     price: 19.99,
     cookingTime: 25,
     servings: 2,
-    imageUrl: "/assets/pork-rice.jpg",
+    imageUrl: "/imgs/groundpork.jpg",
     featuredMealKit: true
   },
   {
@@ -19,7 +19,7 @@ let mealKits = [
     price: 21.99,
     cookingTime: 35,
     servings: 2,
-    imageUrl: "/assets/chicken-potatoes.jpg",
+    imageUrl: "/imgs/lemonchicken.jpg",
     featuredMealKit: false
   },
   {
@@ -30,7 +30,7 @@ let mealKits = [
     price: 18.99,
     cookingTime: 30,
     servings: 2,
-    imageUrl: "/assets/spaghetti.jpg",
+    imageUrl: "/imgs/placeholder.jpg",
     featuredMealKit: true
   },
   {
@@ -41,7 +41,7 @@ let mealKits = [
     price: 20.49,
     cookingTime: 28,
     servings: 2,
-    imageUrl: "/assets/beef-stirfry.jpg",
+    imageUrl: "/imgs/beefstir.jpg",
     featuredMealKit: false
   },
   {
@@ -52,18 +52,18 @@ let mealKits = [
     price: 17.99,
     cookingTime: 22,
     servings: 2,
-    imageUrl: "/assets/buddha-bowl.jpg",
+    imageUrl: "/imgs/veganbowl.jpg",
     featuredMealKit: true
   },
   {
     title: "Tofu Stir-Fry with Broccoli",
-    includes: "Sesame Sauce & Jasmine Rice",
+    includes: "Sesame Sauce & Rice",
     description: "Crispy tofu with stir-fried broccoli and sesame sauce.",
     category: "Vegan Meals",
     price: 16.49,
     cookingTime: 26,
     servings: 2,
-    imageUrl: "/assets/tofu-stirfry.jpg",
+    imageUrl: "/imgs/tofu.png",
     featuredMealKit: false
   }
 ];
@@ -74,14 +74,20 @@ function getAllMealKits() {
 }
 
 function getFeaturedMealKits(mealkits) {
-  return mealkits.forEach(meal => {
+  let filtered = [];
+  mealkits.forEach(meal => {
     meal.featuredMealKit = true;
+    filtered.push(meal);
   });
+  return filtered;
 
 }
 
 function getMealKitsByCategory(mealkits) {
+  const res = [];
   const grouped = {};
+
+  //for each meal, if not in group, add it. push each meal in category to group
 
   mealkits.forEach(meal => {
     if (!grouped[meal.category]) {
@@ -90,10 +96,15 @@ function getMealKitsByCategory(mealkits) {
     grouped[meal.category].push(meal);
   });
 
-  return Object.keys(grouped).map(categoryName => ({
-    categoryName,
-    mealKits: grouped[categoryName]
-  }));
+  //convert groups into array
+  for (const category in grouped) {
+    res.push({
+      categoryName: category,
+      mealKits: grouped[category]
+    });
+  }
+
+  return res;
 }
 
 module.exports = {

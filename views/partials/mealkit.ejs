@@ -1,17 +1,18 @@
-<div class="card bg-base-100 shadow-xl">
+<div class="card card-md bg-base-300">
   <img
     src="<%= mealKit.imageUrl %>"
     alt="<%= mealKit.title %>"
-    class="rounded-xl w-full h-48 object-cover"
+    class="rounded-l w-full h-48 object-cover"
   />
 
   <div class="card-body">
     <h3 class="card-title text-lg"><%= mealKit.title %></h3>
-    <p class="text-sm text-gray-600"><%= mealKit.includes %></p>
+    <p class="text-sm text-gray-200"><%= mealKit.includes %></p>
     <p class="text-sm"><%= mealKit.description %></p>
+    <!--display in row-->
     <div class="flex justify-between items-center mt-4">
-      <div class="text-lg font-bold text-primary">$<%= mealKit.price.toFixed(2) %></div>
-      <p class="text-gray-600"><%= mealKit.cookingTime %> min</p>
+      <div class="text-lg font-bold text-primary">$<%= mealKit.price %></div>
+      <p class="ml-2 text-gray-600"><%= mealKit.cookingTime %> min</p>
     </div>
     <p class="text-gray-600"><%= mealKit.servings %> servings</p>
   </div>

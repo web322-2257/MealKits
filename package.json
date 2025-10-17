@@ -1,18 +1,17 @@
 {
   "name": "web322",
   "version": "1.0.0",
-  "description": "",
+  "description": "Web 322 project, using mealkits",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Bilal Umar",
   "license": "ISC",
   "dependencies": {
     "ejs": "^3.1.10",
     "express": "^5.1.0",
-    "express-ejs-layouts": "^2.5.1",
-    "tailwindcss": "^4.1.13"
+    "express-ejs-layouts": "^2.5.1"
   }
 }

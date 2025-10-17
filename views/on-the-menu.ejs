@@ -1,0 +1,13 @@
+<div class="py-16">
+  <div class="max-w-6xl mx-auto px-4">
+    <% mealKitsByCategory.forEach(group => { %>
+        <h1 class="card-title mt-1 mb-4 text-4xl"> <%= group.categoryName %> </h1>
+            <!--Group elements and display by category-->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <% group.mealKits.forEach(meal => { %>
+            <%- include('partials/mealkit', { mealKit: meal }) %>
+          <% }) %>
+        </div>
+    <% }) %>
+  </div>
+</div>
