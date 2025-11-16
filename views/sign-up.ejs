@@ -4,35 +4,64 @@
           <p class="text-center mb-4">
             Create your account by entering your information and choosing a password!
           </p>
-          <form class="space-y-3">
+          <form class="space-y-3" method="POST" action="/sign-up">
             
             <input
               type="text"
               class="input w-full rounded-lg"
+              name="firstName"
+              value="<%= firstName %>"
               placeholder="Jane"
             />
 
             <input
               type="text"
               class="input w-full rounded-lg"
+              name="lastName"
+              value="<%= lastName %>"
               placeholder="Doe"
             />
 
             <input
-              type="email"
+              type="text"
+              name="email"
+              value="<%= email %>"
               class="input w-full rounded-lg"
               placeholder="you@gmail.com"
             />
 
             <input
               type="password"
+              name="password"
+              value="<%= password %>"
               class="input w-full rounded-lg"
               placeholder="Password"
             />
 
+         
             <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-700">
               Sign Up Today
             </button>
+
+          
+            <div class="mt-4 p-4 rounded-lg">
+              <% if (errors.firstName) { %>
+                <p class="text-red-600 text-sm"><%= errors.firstName %></p>
+              <% } %>
+              <% if (errors.lastName) { %>
+                <p class="text-red-600 text-sm"><%= errors.lastName %></p>
+              <% } %>
+               <% if (errors.email) { %>
+                <p class="text-red-600 text-sm"><%= errors.email %></p>
+              <% } %>
+              <% if (errors.password) { %>
+                <p class="text-red-600 text-sm"><%= errors.password %></p>
+              <% } %>
+            </div>
+            <% if (errors.general) { %>
+                <p class="text-red-600 text-sm"><%= errors.general %></p>
+              <% } %>
+            
           </form>
         </div>
       </div>

@@ -2,28 +2,49 @@
         <div class="card-body">
           <h2 class="text-3xl text-primary text-center">Welcome Back!</h2>
           </p>
-          <form class="space-y-4">
+          <form class="space-y-4" method="POST" action="/log-in">
             <input
-              type="email"
+              type="text"
+              name="email"
+              value="<%= email %>"
               class="input w-full rounded-lg"
               placeholder="you@gmail.com"
             />
 
             <input
               type="password"
-              required
+              name="password"
+              value="<%= password %>"
               class="input w-full rounded-lg"
               placeholder="Password"
             />
 
             <div>
-              <input type="radio" id="custRadio" name="user-role" class="radio" checked />
-              <label for="custRadio" class="relative -top-1.5">Customer</label>
+            <input type="radio" id="custRadio" name="user-role" value="customer" class="radio" 
+            <%= userRole === 'customer' ? 'checked' : '' %>
+            />
+            <label for="custRadio" class="relative -top-1.5">Customer</label>
 
-              <input type="radio" id="clerkRadio" name="user-role" class="radio ml-3" />
-              <label for="clerkRadio" class="relative -top-1.5">Data Clerk</label>
+          <input type="radio" id="clerkRadio" name="user-role" value="clerk" class="radio ml-3"
+            <%= userRole === 'clerk' ? 'checked' : '' %>
+          />
+          <label for="clerkRadio" class="relative -top-1.5">Data Clerk</label>
+          </div>
 
-            </div>
+            <!-- Display any errors from locals-->
+            <% if (errors.email) { %>
+              <p class="text-red-600 text-md"><%= errors.email %></p>
+            <% } %>
+            <% if (errors.password) { %>
+              <p class="text-red-600 text-md"><%= errors.password %></p>
+            <% } %>
+            <% if (errors.userRole) { %>
+              <p class="text-red-600 text-md"><%= errors.userRole %></p>
+            <% } %>
+            <% if (errors.general) { %>
+              <p class="text-red-600 text-md"><%= errors.general %></p>
+            <% } %>
+           
 
             <button type="submit" class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-700">
               Log In

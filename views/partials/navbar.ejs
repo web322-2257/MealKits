@@ -1,19 +1,27 @@
- <nav class="navbar bg-base-300">
-    <div class="navbar-start">
+<nav class="navbar bg-base-200">
+  <div class="navbar-start">
       <a href="/">
         <img src="/imgs/logo.png" alt="FreshMeals Logo" class="h-14 w-14 hover:opacity-65" />
       </a>
       <ul class="menu menu-horizontal ml-0 pl-0">
-        <li><a href="/on-the-menu" class="font-medium">Menu</a></li>
+        <li><a href="/mealkits" class="font-medium">Menu</a></li>
         <li><a href="#" class="font-medium">Pricing</a></li>
         <li><a href="#" class="font-medium">Blog</a></li>
       </ul>
-    </div>
-    <!--display at end-->
-    <div class="navbar-end">
-      <a href="/log-in" class="btn btn-ghost btn-sm mr-5">Log in</a>
+  </div>
 
+  <div class="navbar-end">
+    <% if (user) {%>
+      <!-- get user information from req -->
+      <% if (user.role === 'customer') {%>
+        <a href="/cart" class="btn btn-ghost btn-sm">Hello, <%= user.firstName %></a>
+      <% } else {%>
+        <a href="/mealkits/list" class="btn btn-ghost btn-sm">Hello, <%= user.firstName %></a>
+      <% } %>
+      <a href="/logout" class="btn btn-ghost btn-sm">Logout</a>
+    <% } else { %>
+      <a href="/log-in" class="btn btn-ghost btn-sm mr-5">Log in</a>
       <a href="/sign-up" class="btn btn-primary btn-sm">Sign up</a>
-    </div>
-  </nav>
-</html>
+    <% } %>
+  </div>
+</nav>
