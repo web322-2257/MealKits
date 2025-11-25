@@ -112,7 +112,7 @@ router.post('/sign-up', async (req, res) => {
           errors.password = 'Please enter a password';
      } else if (password.length < 8 || password.length > 12) {
           errors.password = 'Password must be 8-12 characters and contain at least one lowercase letter, uppercase letter, number, and symbol';
-     } else if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+     } else if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
           errors.password = 'Password must be 8-12 characters and contain at least one lowercase letter, uppercase letter, number, and symbol';
      }
 
