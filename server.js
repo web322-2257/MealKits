@@ -14,12 +14,13 @@
 const path = require("path");
 const express = require('express');
 const app = express();
-const session = require("express-session")
+const session = require("express-session");
 const mongoose = require('mongoose');
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 const ejs = require('ejs');
 const expressLayouts = require('express-ejs-layouts');
-const userModule = require('./models/usermodule'); // Import the module
+
 
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
@@ -28,7 +29,8 @@ app.set('views', path.join(__dirname, 'views'));
 const bodyParser = require('body-parser');
 
 const generalController = require("./controllers/GeneralController");
-const mealkitContrller = require("./controllers/MealkitController")
+const mealkitContrller = require("./controllers/MealkitController");
+const loadDataController = require("./controllers/LoadDataController");
 
 // use public for static imgs
 app.use(express.static(path.join(__dirname, 'public')));
@@ -43,8 +45,14 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(fileUpload({
+    limits: { fileSize: 5 * 1024 * 1024 },
+    abortOnLimit: true,
+    createParentPath: true
+}));
 app.use("/", generalController);
 app.use("/mealkits", mealkitContrller);
+app.use("/load-data", loadDataController);
 
 
 mongoose.connect(process.env.CONNECTION_STR);

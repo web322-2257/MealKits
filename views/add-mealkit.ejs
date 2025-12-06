@@ -1,0 +1,162 @@
+
+    <div class="max-w-2xl mx-auto mt-5">
+        <h1 class="text-5xl font-bold text-center text-white mb-6">Add New Meal Kit</h1>
+
+        <form method="POST" action="/mealkits/add" enctype="multipart/form-data" class="space-y-4">
+
+            <div>
+                <label class="label">
+                    Title
+                </label>
+                <input 
+                    type="text" 
+                    name="title" 
+                    value="<%= locals.formData?.title || '' %>"
+                    class="input input-bordered w-full" 
+                    placeholder="e.g., Creamy Tuscan Chicken"
+                />
+                <% if (errors.title) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.title %></p>
+                <% } %>
+            </div>
+
+            <div>
+                <label class="label">
+                    Includes
+                </label>
+                <input 
+                    type="text" 
+                    name="includes" 
+                    value="<%= locals.formData?.includes || '' %>"
+                    class="input input-bordered w-full" 
+                    placeholder="e.g., Chicken breast, sun-dried tomatoes, spinach"
+                />
+                <% if (errors.includes) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.includes %></p>
+                <% } %>
+            </div>
+
+            <div>
+                <label class="label">
+                    <span class="label-text">Description *</span>
+                </label>
+                <textarea 
+                    name="description" 
+                    rows="4"
+                    class="textarea textarea-bordered w-full" 
+                    placeholder="Describe the meal kit..."
+                ><%= locals.formData?.description || '' %></textarea>
+                <% if (errors.description) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.description %></p>
+                <% } %>
+            </div>
+
+            <div>
+                <label class="label">
+                    Category
+                </label>
+                <input 
+                    type="text" 
+                    name="category" 
+                    value="<%= locals.formData?.category || '' %>"
+                    class="input input-bordered w-full" 
+                    placeholder="e.g., Italian, Asian, Mexican"
+                />
+                <% if (errors.category) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.category %></p>
+                <% } %>
+            </div>
+
+            <div>
+                <label class="label">
+                    Price
+                </label>
+                <input 
+                    type="number" 
+                    name="price" 
+                    value="<%= locals.formData?.price || '' %>"
+                    step="0.01"
+                    min="0.01"
+                    class="input input-bordered w-full" 
+                    placeholder="24.99"
+                />
+                <% if (errors.price) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.price %></p>
+                <% } %>
+            </div>
+
+            <div>
+                <label class="label">
+                    Cook Time (minutes)
+                </label>
+                <input 
+                    type="number" 
+                    name="cookingTime" 
+                    value="<%= locals.formData?.cookingTime || '' %>"
+                    min="1"
+                    class="input input-bordered w-full" 
+                    placeholder="30"
+                />
+                <% if (errors.cookingTime) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.cookingTime %></p>
+                <% } %>
+            </div>
+
+            <div>
+                <label class="label">
+                     Servings
+                </label>
+                <input 
+                    type="number" 
+                    name="servings" 
+                    value="<%= locals.formData?.servings || '' %>"
+                    min="1"
+                    class="input input-bordered w-full" 
+                    placeholder="2"
+                />
+                <% if (errors.servings) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.servings %></p>
+                <% } %>
+            </div>
+
+            <div>
+                <label class="label">
+                    Image
+                </label>
+                <input 
+                    type="file" 
+                    name="image" 
+                    accept="image/jpeg,image/jpg,image/png,image/gif"
+                    class="file-input file-input-bordered w-full" 
+                />
+                
+                <% if (errors.image) { %>
+                    <p class="text-red-600 text-sm mt-1"><%= errors.image %></p>
+                <% } %>
+            </div>
+
+                <label class="label cursor-pointer justify-start gap-4">
+                    <input 
+                        type="checkbox" 
+                        name="featuredMealKit" 
+                        class="checkbox" 
+                        <%= locals.formData?.featuredMealKit === 'on' ? 'checked' : '' %>
+                    />
+                    Featured Kit
+                </label>
+        
+
+            <% if (errors.general) { %>
+                <div class="alert alert-error">
+                    <%= errors.general %>
+                </div>
+            <% } %>
+
+          <button type="submit" class="btn btn-md btn-primary">Add Meal Kit</button>
+          <a href="/mealkits/list" class="btn btn-md btn-error">Cancel</a>
+        
+        </form>
+    </div>
+
+
+

@@ -1,0 +1,17 @@
+<div class="container mx-auto p-8 bg-base">
+    <div class="max-w-2xl mx-auto text-center bg-base">
+        <% if (success) { %>
+            <div class="bg-base border border-green-300 rounded-lg p-8">
+                <h1 class="text-3xl font-bold text-green-600 mb-4">Success!</h1>
+                <p class="text-white text-lg mb-6"><%= message %></p>
+                <a href="/mealkits/list" class="btn btn-primary">Back to Meal Kits List</a>
+            </div>
+        <% } else { %>
+            <div class="bg-base border border-yellow-300 rounded-lg p-8">
+                <h1 class="text-3xl font-bold text-yellow-600 mb-4">Already Loaded</h1>
+                <p class="text-white text-lg mb-6"><%= message %></p>
+                <a href="/mealkits/list" class="btn btn-primary">Back to Meal Kits List</a>
+            </div>
+        <% } %>
+    </div>
+</div>

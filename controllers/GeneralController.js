@@ -4,6 +4,7 @@ const formData = require("form-data");
 const Mailgun = require("mailgun.js");
 const bcrypt = require('bcryptjs');
 const userModule = require("../models/usermodule.js");
+const mealkitModule = require("../models/mealkitModel.js");
 
 // index.js
 const mailgun = new Mailgun(formData);
@@ -14,11 +15,11 @@ const mg = mailgun.client({
 
 });
 
-const mealkitData = require('../modules/mealkit-util.js');
 
-router.get('/', (req, res) => {
-     const allMealKits = mealkitData.getAllMealKits();
-     const featuredMealKits = mealkitData.getFeaturedMealKits(allMealKits);
+router.get('/', async (req, res) => {
+     const featuredMealKits = await mealkitModule.mealkitModel.find({
+          featuredMealKit: true
+     });
      res.render('home', {
           title: 'Home',
           featuredMealKits: featuredMealKits
@@ -68,7 +69,6 @@ router.post('/log-in', async (req, res) => {
                });
           }
 
-
           //create new session
           req.session.user = {
                firstName: user.firstName,
@@ -76,18 +76,16 @@ router.post('/log-in', async (req, res) => {
                role: userRole
           };
 
+          res.locals.user = req.session.user;
+
           //user is valid, log in
           if (userRole === 'customer')
                res.redirect('cart');
           else
                res.redirect("mealkits/list");
      } catch (error) {
-          errors.general = 'Error occured';
+          errors.general = 'Error occured' + error;
      }
-
-
-
-
 });
 
 router.post('/sign-up', async (req, res) => {
@@ -190,6 +188,171 @@ router.post('/sign-up', async (req, res) => {
                password
           });
      }
+});
+
+
+router.post('/cart/add/:id', async (req, res) => {
+     let message = '';
+     let errors = {};
+
+
+     // Check if user is a customer
+     if (!req.session.user || req.session.user.role !== 'customer') {
+          return res.status(401).render('error', {
+               title: 'Unauthorized',
+               statusCode: 401,
+               errorMessage: 'Only customers can add items to cart'
+          });
+     }
+
+     try {
+          const mealkitId = req.params.id;
+
+          let cart = req.session.cart = req.session.cart || [];
+
+          const mealkit = await mealkitModule.mealkitModel.findById(mealkitId);
+
+          let found = false;
+          cart.forEach(cartItem => {
+               if (cartItem.id === mealkitId) {
+                    // Meal kit already in cart, increment quantity
+                    found = true;
+                    cartItem.qty++;
+               }
+          });
+
+          if (!found) {
+               // Meal kit not in cart, add it
+               cart.push({
+                    id: mealkitId,
+                    qty: 1,
+                    mealkit: mealkit
+               });
+
+
+               message = `"${mealkit.title}" was added to your cart`;
+          } else {
+               message = `"${mealkit.title}" quantity increased in your cart`;
+          }
+
+          res.redirect('/cart?message=' + encodeURIComponent(message));
+
+     } catch (error) {
+          console.error('Add to cart error:', error);
+          errors.general = 'An error occurred while adding to cart';
+          res.render('cart', {
+               title: 'Shopping Cart',
+               cart: req.session.cart || [],
+               errors: errors
+          });
+     }
+});
+
+router.post('/cart/remove/:id', async (req, res) => {
+     let message = '';
+     let errors = {};
+
+
+     // Check if user is a customer
+     if (!req.session.user || req.session.user.role !== 'customer') {
+          return res.status(401).render('error', {
+               title: 'Unauthorized',
+               statusCode: 401,
+               errorMessage: 'Only customers can add items to cart'
+          });
+     }
+
+     try {
+          const mealkitId = req.params.id;
+
+          let cart = req.session.cart = req.session.cart || [];
+
+          const mealkit = await mealkitModule.mealkitModel.findById(mealkitId);
+
+          const index = cart.findIndex(item => item.id === mealkitId);
+
+          if (index !== -1) {
+               cart.splice(index, 1);
+          }
+
+          message = `"${mealkit.title}" was removed`;
+
+
+          res.redirect('/cart?message=' + encodeURIComponent(message));
+     }
+
+     catch (error) {
+          console.error('Add to cart error:', error);
+          errors.general = 'An error occurred while adding to cart';
+          res.render('cart', {
+               title: 'Shopping Cart',
+               cart: req.session.cart || [],
+               errors: errors
+          });
+     }
+});
+
+router.post('/cart/checkout', async (req, res) => {
+
+     let cart = req.session.cart || [];
+
+     let emailText = `Hi ${req.session.user.firstName},\nHere is your shopping cart:\n\n`;
+
+     let total = 0;
+
+     for (let item of cart) {
+          let lineCost = item.mealkit.price * item.qty;
+          total += lineCost;
+
+          emailText += `${item.mealkit.title} (x${item.qty}) - $${lineCost}\n`;
+     }
+
+     await mg.messages.create(process.env.MAILGUN_DMN, {
+          from: `Meal Planner <postmaster@${process.env.MAILGUN_DMN}>`,
+          to: [req.session.user.email],
+          subject: 'Welcome to Our Website!',
+          text: emailText, total
+     });
+
+     req.session.cart = [];
+
+     res.redirect('/cart');
+
+
+});
+
+router.get('/cart', (req, res) => {
+
+     // Check if user is a customer
+     if (!req.session.user || req.session.user.role !== 'customer') {
+          return res.status(401).render('error', {
+               title: 'Unauthorized',
+               statusCode: 401,
+               errorMessage: 'Only customers can view cart'
+          });
+     }
+
+     const cart = req.session.cart || [];
+     const message = req.query.message || '';
+
+     // Calculate totals
+     let subtotal = 0;
+     cart.forEach(item => {
+          subtotal += item.mealkit.price * item.qty;
+     });
+
+     const tax = subtotal * 0.10;
+     const grandTotal = subtotal + tax;
+
+     res.render('cart', {
+          title: 'Shopping Cart',
+          cart: cart,
+          subtotal: subtotal,
+          tax: tax,
+          grandTotal: grandTotal,
+          message: message,
+          errors: {}
+     });
 });
 
 
