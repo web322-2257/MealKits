@@ -91,11 +91,11 @@ router.post('/add', async (req, res) => {
           errors.image = 'Image is required';
      } else {
           const imageFile = req.files.image;
-          const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+          const allowedExtensions = '.png';
           const fileExtension = path.extname(imageFile.name).toLowerCase();
 
           if (!allowedExtensions.includes(fileExtension)) {
-               errors.image = 'Only JPG, JPEG, PNG, and GIF images are allowed';
+               errors.image = 'Only PNG images are allowed';
           }
      }
      // If there are errors, re-render form with errors
@@ -180,11 +180,11 @@ router.post('/edit/:id', async (req, res) => {
      // Validate image if uploaded 
      if (req.files && req.files.image) {
           const imageFile = req.files.image;
-          const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+          const allowedExtensions = '.png';
           const fileExtension = path.extname(imageFile.name).toLowerCase();
 
           if (!allowedExtensions.includes(fileExtension)) {
-               errors.image = 'Only JPG, JPEG, PNG, and GIF images are allowed';
+               errors.image = 'Only PNG images are allowed';
           }
      }
 
@@ -222,7 +222,7 @@ router.post('/edit/:id', async (req, res) => {
 
                // Delete old image file if it exists
                if (oldMealkit.imageUrl) {
-                    const filePath = path.join(__dirname, '..', 'public', oldMealkit.imageUrl.replace(/^\//, ''));
+                    const filePath = path.join(__dirname, '..', 'public', oldMealkit.imageUrl.replace(/^\//, '')); //join the path name to find origin
                     await fs.rm(filePath, { force: true });
                }
 

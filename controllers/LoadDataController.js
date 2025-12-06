@@ -106,10 +106,8 @@ router.get('/mealkits', async (req, res) => {
                });
           }
 
-          // Load the data
           await mealkitModule.mealkitModel.insertMany(mealKits);
 
-          // Show success
           res.render('load-data-result', {
                title: 'Success',
                success: true,
@@ -127,7 +125,7 @@ router.get('/mealkits', async (req, res) => {
 });
 
 router.get('/load-data-result', (req, res) => {
-     res.render('load-data-result', { title: '', success: false, message: '' });
+     res.render('load-data-result', { title: '', success: false, message: '' }); //render with status and message
 });
 
 module.exports = router;

@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs');
 const userModule = require("../models/usermodule.js");
 const mealkitModule = require("../models/mealkitModel.js");
 
-// index.js
 const mailgun = new Mailgun(formData);
 
 const mg = mailgun.client({
@@ -14,7 +13,6 @@ const mg = mailgun.client({
      username: "api",
 
 });
-
 
 router.get('/', async (req, res) => {
      const featuredMealKits = await mealkitModule.mealkitModel.find({
@@ -59,6 +57,7 @@ router.post('/log-in', async (req, res) => {
           const valid = await bcrypt.compare(password, user.password);
 
           if (!user || !valid) {
+               //return error and re-render with same data
                errors.general = 'Sorry, you entered an invalid email or password';
                return res.render('log-in', {
                     title: 'Login',
@@ -69,7 +68,7 @@ router.post('/log-in', async (req, res) => {
                });
           }
 
-          //create new session
+          //create new session if valid
           req.session.user = {
                firstName: user.firstName,
                email: user.email,
@@ -78,7 +77,7 @@ router.post('/log-in', async (req, res) => {
 
           res.locals.user = req.session.user;
 
-          //user is valid, log in
+          //user is valid, move to appropriate page
           if (userRole === 'customer')
                res.redirect('cart');
           else
@@ -92,6 +91,7 @@ router.post('/sign-up', async (req, res) => {
      const { firstName, lastName, email, password } = req.body;
      const errors = {};
 
+     //Check all errors, and email type
      if (!firstName || firstName.trim() === '') {
           errors.firstName = 'Please enter your first name';
      }
@@ -111,6 +111,7 @@ router.post('/sign-up', async (req, res) => {
      } else if (password.length < 8 || password.length > 12) {
           errors.password = 'Password must be 8-12 characters and contain at least one lowercase letter, uppercase letter, number, and symbol';
      } else if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
+          //this test checks the password is with valid characters and lowerCase/upperCase
           errors.password = 'Password must be 8-12 characters and contain at least one lowercase letter, uppercase letter, number, and symbol';
      }
 
@@ -153,7 +154,6 @@ router.post('/sign-up', async (req, res) => {
           });
           await user.save();
 
-
           console.log('Sending email to:', email);
           console.log('Domain:', process.env.MAILGUN_DMN);
 
@@ -163,16 +163,13 @@ router.post('/sign-up', async (req, res) => {
                to: [email],
                subject: 'Welcome to Our Website!',
                text: `Hi ${firstName} ${lastName},\n\nWelcome to our website! By Bilal Umar.\n\nBest regards from Meal Planner.`
-
-
           });
 
-          //fix this!
+          //update new session
           req.session.user = {
                firstName: user.firstName,
                email: user.email
           };
-
 
           res.redirect("welcome");
 
@@ -196,7 +193,7 @@ router.post('/cart/add/:id', async (req, res) => {
      let errors = {};
 
 
-     // Check if user is a customer
+     // Check session state
      if (!req.session.user || req.session.user.role !== 'customer') {
           return res.status(401).render('error', {
                title: 'Unauthorized',
@@ -271,7 +268,7 @@ router.post('/cart/remove/:id', async (req, res) => {
 
           const index = cart.findIndex(item => item.id === mealkitId);
 
-          if (index !== -1) {
+          if (index !== -1) { //if in cart, remove
                cart.splice(index, 1);
           }
 
@@ -300,18 +297,19 @@ router.post('/cart/checkout', async (req, res) => {
 
      let total = 0;
 
-     for (let item of cart) {
+
+     cart.forEach(item => {
           let lineCost = item.mealkit.price * item.qty;
           total += lineCost;
-
           emailText += `${item.mealkit.title} (x${item.qty}) - $${lineCost}\n`;
-     }
+     });
+     total += total * 0.10;
 
      await mg.messages.create(process.env.MAILGUN_DMN, {
           from: `Meal Planner <postmaster@${process.env.MAILGUN_DMN}>`,
           to: [req.session.user.email],
-          subject: 'Welcome to Our Website!',
-          text: emailText, total
+          subject: 'Updated Shopping Cart',
+          text: emailText + "\n Grand Total: " + total
      });
 
      req.session.cart = [];
@@ -386,17 +384,9 @@ router.get('/log-in', (req, res) => {
 
 
 router.get('/cart', (req, res) => {
-     // check session
-     if (!req.session.user) {
-          return res.status(401).render('error', {
-               title: 'Unauthorized',
-               statusCode: 401,
-               errorMessage: 'You are not authorized to view this page'
-          });
-     }
 
      // check if valid customer
-     if (req.session.user.role !== 'customer') {
+     if (!req.session.user || req.session.user.role !== 'customer') {
           return res.status(401).render('error', {
                title: 'Unauthorized',
                statusCode: 401,
