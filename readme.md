@@ -1,4 +1,4 @@
-# <img src="/public/imgs/logo.png" alt="Icon" width="27" height="27"> MealKits
+# <img src="/public/imgs/logo.png" alt="Icon" width="50" height="50"> MealKits
 
 A full-stack meal kit delivery platform inspired by Factor 75, allowing users to browse curated meal options, manage subscriptions, and purchase pre-portioned meal kits with secure checkout and order management.
 
