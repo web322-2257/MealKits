@@ -1,6 +1,7 @@
 #  Meal Kits
 
 A full-stack meal kit delivery platform inspired by Factor 75, allowing users to browse curated meal options, manage subscriptions, and purchase pre-portioned meal kits with secure checkout and order management.
+
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green)
 ![Express](https://img.shields.io/badge/Express-4.x-lightgrey)
 ![MongoDB](https://img.shields.io/badge/MongoDB-6.x-green)
